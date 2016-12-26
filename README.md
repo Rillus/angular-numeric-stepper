@@ -1,6 +1,6 @@
-# Angular Numeric Stepper directive
+# Angular stepper directive ![](https://img.shields.io/badge/maintained%3F-no!-red.svg?style=flat)
 
-A little bit advanced numeric stepper. Based on https://github.com/revolunet/angular-stepper
+A simple numeric stepper for angular 1.x.
 
 Has "step-by" attribute and a different layout
 
@@ -14,6 +14,8 @@ To use the directive at this moment, there are two ways. (Pretty boring ways if 
 
 after installing add a dependency
 
+Or npm : `npm install --save angular-stepper`
+
 add a dependency to your app :
 ```javascript
 angular.module('MyApp', [
@@ -22,9 +24,13 @@ angular.module('MyApp', [
 ```
 use the directive :
 ```html
-<div numeric-stepper ng-model="product.quantity" min="config.min" max="config.max" step-by="config.stepBy"></div>
+<div rn-stepper ng-model="product.quantity" ng-disabled="config.totalAvailable < 1" min="config.min" max="config.max"></div>
+```
+Note: Optionaly, you can add a detailed label
+```html
+<div rn-stepper ng-model="product.quantity" ng-disabled="config.totalAvailable < 1" min="config.min" max="config.max" label="point"></div>
 ```
 
 ## Licence
-Licensed under the permissive MIT license
+Licensed under the permissive MIT license, contributions welcome
 

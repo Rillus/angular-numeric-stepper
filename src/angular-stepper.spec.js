@@ -37,9 +37,9 @@ describe('rnStepper directive', function() {
             compileDirective();
         });
         // a single test example
-        it('should produce 2 buttons and a div', function() {
+        it('should produce 2 buttons and a input', function() {
             expect(elm.find('button').length).toEqual(2);
-            expect(elm.find('div').length).toEqual(1);
+            expect(elm.find('input').length).toEqual(1);
         });
         it('should check validity on init', function() {
             expect(scope.form.$valid).toBeTruthy();
@@ -148,16 +148,42 @@ describe('rnStepper directive', function() {
         });
         // same for MAX
     });
+
+    describe('ngDisabled integration', function () {
+        it('should add disabled attribute to elements when disabled', function() {
+            scope.disabled = true;
+            compileDirective('<div rn-stepper ng-model="testModel" ng-disabled="disabled"></div>');
+            expect(angular.element(elm[0]).attr('disabled')).toBeTruthy();
+            expect(angular.element(elm.find('button')[0]).attr('disabled')).toBeTruthy();
+            expect(angular.element(elm.find('button')[1]).attr('disabled')).toBeTruthy();
+            expect(angular.element(elm.find('input')[0]).attr('disabled')).toBeTruthy();
+        });
+
+        it('should not have disabled attribute when not disabled', function () {
+            scope.disabled = false;
+            compileDirective('<div rn-stepper ng-model="testModel" ng-disabled="disabled"></div>');
+            expect(angular.element(elm[0]).attr('disabled')).not.toBeDefined();
+            expect(angular.element(elm.find('button')[0]).attr('disabled')).not.toBeDefined();
+            expect(angular.element(elm.find('button')[1]).attr('disabled')).not.toBeDefined();
+            expect(angular.element(elm.find('input')[0]).attr('disabled')).not.toBeDefined();
+        });
+
+        it('should dynamically update ngDisabled attribute when the condition changes', function () {
+            scope.disabled = false;
+            compileDirective('<div rn-stepper ng-model="testModel" ng-disabled="disabled"></div>');
+            expect(angular.element(elm[0]).attr('disabled')).toBeFalsy();
+
+            scope.disabled = true;
+            scope.$digest();
+            expect(angular.element(elm[0]).attr('disabled')).toBeTruthy();
+        });
+    });
+
     describe('increment', function() {
-        it('should increment model value', function() {
+        it('should increment value', function() {
             compileDirective();
             elm.isolateScope().increment();
             expect(scope.testModel).toEqual(43);
-        });
-        it('should update view', function() {
-            compileDirective();
-            elm.isolateScope().increment();
-            expect(elm.find('div').html()).toEqual('43');
         });
         it('should update form dirty state', function() {
             compileDirective();
@@ -167,15 +193,10 @@ describe('rnStepper directive', function() {
         });
     });
     describe('decrement', function() {
-        it('should decrement model value', function() {
+        it('should decrement value', function() {
             compileDirective();
             elm.isolateScope().decrement();
             expect(scope.testModel).toEqual(41);
-        });
-        it('should update view', function() {
-            compileDirective();
-            elm.isolateScope().decrement();
-            expect(elm.find('div').html()).toEqual('41');
         });
         it('should update form dirty state', function() {
             compileDirective();
@@ -184,5 +205,5 @@ describe('rnStepper directive', function() {
             expect(scope.form.$dirty).toBeTruthy();
         });
     });
-    
+
 });

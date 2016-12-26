@@ -13,19 +13,32 @@
         <script>
         angular.module('demo', ['revolunet.stepper'])
 
-        .controller('DemoController', function($scope) {
+        .controller('DemoController1', function($scope) {
             $scope.score = 42;
             $scope.step = 2;
             $scope.minScore = 45;
             $scope.maxScore = 50;
-        });
+        })
 
+        .controller('DemoController2', function($scope) {
+            $scope.score = 42;
+            $scope.minScore = 45;
+            $scope.maxScore = 50;
+        })
+
+        .controller('DemoController3', function ($scope) {
+            $scope.score = 42;
+            $scope.minScore = 45;
+            $scope.maxScore = 50;
+
+            $scope.disabled = false;
+        });
         </script>
     <head>
     <body ng-app="demo">
         <a href="https://github.com/simalexan/angular-stepper"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
         <h3>angular-stepper demo</h3>
-        <div ng-controller="DemoController">
+        <div ng-controller="DemoController1">
             Score : {{ score }}<br>
             Step : {{ step }}<br>
             Min score : {{ minScore }}<br>
@@ -33,6 +46,20 @@
             <br>
             <div numeric-stepper step-by="step" min="minScore" max="maxScore" ng-model="score"></div>
         </div>
-
+        <div ng-controller="DemoController2">
+            Score : {{ score }}<br>
+            Min score : {{ minScore }}<br>
+            Max score : {{ maxScore }}<br>
+            <br>
+            <div rn-stepper min="minScore" max="maxScore" label="point" ng-model="score"></div>
+        </div>
+        <div ng-controller="DemoController3">
+            Score : {{ score }}<br>
+            Min score : {{ minScore }}<br>
+            Max score : {{ maxScore }}<br>
+            <button ng-click="disabled = !disabled">{{ (disabled ? 'Enable' : 'Disable') }}</button><br />
+            <br>
+            <div rn-stepper min="minScore" max="maxScore" label="point" ng-model="score" ng-disabled="disabled"></div>
+        </div>
     </body>
 </html>

@@ -1,21 +1,30 @@
 angular.module('revolunet.stepper', [])
 
-.directive('numericStepper', function() {
+.directive('rnStepper', function() {
     return {
         restrict: 'AE',
         require: 'ngModel',
         scope: {
             min: '=',
             max: '=',
-            stepBy: '='
+            ngModel: '=',
+            ngDisabled: '='
         },
-        template:   '<span></span>' +
-                    '<div><button ng-disabled="isOverMax()" ng-click="increment()">+</button>' +
-                    '<button ng-disabled="isOverMin()" ng-click="decrement()">-</button></div>',
+        template: '<button type="button" ng-disabled="isOverMin() || ngDisabled" ng-click="decrement()">-</button>' +
+                  '<input type="text" ng-model="ngModel" ng-disabled="ngDisabled">' +
+                  '<button type="button" ng-disabled="isOverMax() || ngDisabled" ng-click="increment()">+</button>',
         link: function(scope, iElement, iAttrs, ngModelController) {
 
+            scope.label = '';
+
+            if (angular.isDefined(iAttrs.label)) {
+                iAttrs.$observe('label', function(value) {
+                    scope.label = ' ' + value;
+                    ngModelController.$render();
+                });
+            }
+
             ngModelController.$render = function() {
-                iElement.find('span').text(ngModelController.$viewValue);
                 // update the validation status
                 checkValidity();
             };
@@ -47,39 +56,21 @@ angular.module('revolunet.stepper', [])
             }
 
             scope.isOverMin = function(strict) {
-                var offset = strict ? 0 : scope.stepBy;
+                var offset = strict?0:1;
                 return (angular.isDefined(scope.min) && (ngModelController.$viewValue - offset) < parseInt(scope.min, 10));
             };
-
-            /**
-             * @name isOverMax
-             * @param strict
-             * @description When the user clicks the increment button, increments the value by the step coefficient
-             */
             scope.isOverMax = function(strict) {
-                var offset = strict ? 0 : scope.stepBy;
+                var offset = strict?0:1;
                 return (angular.isDefined(scope.max) && (ngModelController.$viewValue + offset) > parseInt(scope.max, 10));
             };
 
 
-            /**
-             * @name increment
-             * @description When the user clicks the increment button, increments the value by the step coefficient
-             */
+            // update the value when user clicks the buttons
             scope.increment = function() {
-                if(angular.isDefined(scope.stepBy) && !isNaN(Number(scope.stepBy))){
-                    updateModel(+Number(scope.stepBy));
-                }
+                updateModel(+1);
             };
-
-            /**
-             * @name decrement
-             * @description UWhen the user clicks the increment button, decrements the value by the step coefficient
-             */
             scope.decrement = function() {
-                if(angular.isDefined(scope.stepBy) && !isNaN(Number(scope.stepBy))){
-                    updateModel(-Number(scope.stepBy));
-                }
+                updateModel(-1);
             };
 
             // check validity on start, in case we're directly out of bounds
