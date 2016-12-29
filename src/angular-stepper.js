@@ -8,7 +8,8 @@ angular.module('revolunet.stepper', [])
             min: '=',
             max: '=',
             ngModel: '=',
-            ngDisabled: '='
+            ngDisabled: '=',
+            ngChange: '=',
         },
         template: '<button type="button" ng-disabled="isOverMin() || ngDisabled" ng-click="decrement()">-</button>' +
                   '<input type="text" ng-model="ngModel" ng-disabled="ngDisabled">' +
@@ -53,6 +54,11 @@ angular.module('revolunet.stepper', [])
                 ngModelController.$setViewValue(ngModelController.$viewValue + offset);
                 // update the local view
                 ngModelController.$render();
+
+                // if ngChange is defined, run it as a function
+                if (scope.ngChange !== undefined) {
+                    scope.ngChange();
+                }
             }
 
             scope.isOverMin = function(strict) {
